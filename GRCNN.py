@@ -94,6 +94,7 @@ class GRCNN(nn.Module):
         conv = conv.squeeze(2)
         conv = conv.permute(2, 0, 1)  # [w, b, c]
         conv = self.rnn(conv)
+        conv = F.log_softmax(conv, dim=2)
         return conv
 
 

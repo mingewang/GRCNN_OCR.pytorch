@@ -7,7 +7,8 @@ from torch.autograd import Variable
 import torch.optim as optim
 import cv2
 import os
-from warpctc_pytorch import CTCLoss
+#from warpctc_pytorch import CTCLoss
+from torch.nn import CTCLoss
 from glob import glob
 import utils
 import shutil
@@ -19,7 +20,7 @@ parser = argparse.ArgumentParser(description='PyTorch GCRNN Training')
 parser.add_argument('--lr', default=0.001, type=float, help='learning rate')
 parser.add_argument('--beta1', default=0.5, type=float, help='beta1')
 parser.add_argument('--beta2', default=0.999, type=float, help='beta2')
-parser.add_argument('--epoches', default=2, type=int, help='the number of train')
+parser.add_argument('--epoches', default=200, type=int, help='the number of train')
 parser.add_argument('--is_use_gpu', default=False, type=bool, help='is use gpu')
 parser.add_argument('--gpu_list', default='-1', type=str, help='gpu_list')
 parser.add_argument('--batch_size', default=2, type=int, help='min batch size')
@@ -124,7 +125,7 @@ for epoch in range(1, args.epoches, 1):
                 train_acc += 1
         avg_totalLoss += total_loss.item()
         info='epoch : %d ,process: %d/%d ,  totalLoss: %f , lr: %f  ' % (epoch, batch_id, trainloader.__len__(), total_loss.item(), optimizer.param_groups[0]['lr'])
-        #print(info)
+        print(info)
         #break
     train_acc /= len(dataset)
     avg_train_acc.append(train_acc)
@@ -158,6 +159,8 @@ for epoch in range(1, args.epoches, 1):
 
     info='epoch : %d , avg_totalLoss: %f , lr: %f  avg_test_acc: %f   avg_train_acc: %f ' % (epoch, avg_totalLoss, optimizer.param_groups[0]['lr'], test_acc, train_acc)
     print(info)
+
+    #import pdb; pdb.set_trace()
     # save result
     if best_acc <= test_acc:
         best_acc = test_acc
